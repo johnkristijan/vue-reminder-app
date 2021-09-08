@@ -5,19 +5,18 @@
       title="Task tracker"
       :showAddTask="showAddTask"
     />
+    <button @click="printToConsole">Log</button>
     <div v-if="showAddTask">
       <AddTask @add-task="addTask" />
     </div>
     <Tasks
-      @toggle-reminder="toggleReminder"      
-      @toggle-update-task-text="updTaskText"       
+      @toggle-reminder="toggleReminder"
+      @toggle-update-task-text="updTaskText"
       @deleteTask="deleteTask"
       :tasks="tasks"
     />
   </div>
 </template>
-
-
 
 <script>
 import Header from "./components/Header.vue";
@@ -38,10 +37,11 @@ export default {
       showUpdateTask: true,
     };
   },
-  computed:{
-
-  },
+  computed: {},
   methods: {
+    printToConsole() {
+      console.log("this.tasks :>> ", this.tasks);
+    },
     toggleAddTask() {
       this.showAddTask = !this.showAddTask;
     },
@@ -121,7 +121,6 @@ export default {
   },
 };
 </script>
-
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap");

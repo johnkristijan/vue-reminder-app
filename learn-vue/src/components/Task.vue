@@ -4,28 +4,20 @@
     v-bind:class="[task.reminder ? 'reminder' : '', 'task']"
   >
     <!-- we need to add ", task" since we always want to display the task! -->
-    <h3>
+    <h3 v-if="!editMode">
       {{ task.text }}
 
       <!-- fas = font awesome class -->
-      <i @click="$emit('toggle-update-task-text', task.id)" class="fas fa-edit">
-      
-      </i>
+      <i @click="clickHandler()" class="fas fa-edit"> </i>
       <i @click="$emit('delete-task', task.id)" class="fas fa-times"></i>
     </h3>
 
     <p>{{ task.day }}</p>
 
-    <!-- 
-      
-      
-      <h3 v-if="false">
-      <input v-if="false" :placeholder="[[task.text]]" />
-      <i
-        @click="$emit('toggle-save-task-text', task.id)"
-        class="fas fa-save"
-      ></i>
-    </h3> -->
+    <h3 v-if="editMode">
+      <input v-model="task.text" />
+      <i @click="saveTask()" class="fas fa-save"></i>
+    </h3>
   </div>
 </template>
 
@@ -34,6 +26,36 @@ export default {
   name: "Task",
   props: {
     task: Object,
+  },
+  data() {
+    return {
+      editMode: false,
+    };
+  },
+  methods: {
+    clickHandler() {
+      this.editMode = true;
+      //   this.$emit('toggle-update-task-text', task.id)
+    },
+    async saveTask() {
+      this.editMode = false;
+        const ID = this.task.id
+        const response = await fetch(`api/tasks/${ID}`, {
+        method: "PUT",
+        headers: {
+            "Content-type": "application/json",
+        },
+        body: JSON.stringify(this.task),
+        });
+
+        if (response.ok) {
+            // all 2xx responses
+            console.log('Task saved!')
+        } else {
+            // backend says "nayy"
+            console.warn('Could not save this task!')
+        }
+    },
   },
 };
 </script>
